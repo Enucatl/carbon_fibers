@@ -4,27 +4,50 @@ library(argparse)
 library(ggplot2)
 library(data.table)
 
-commandline_parser <- ArgumentParser(
-        description="draw results for angle analysis") 
+commandline_parser <- ArgumentParser(description="draw results for angle analysis") 
 
 commandline_parser$add_argument('-f', '--file',
-            type='character', nargs='?', default='dark_field_table.csv')
+                                type='character', nargs='?', default='angle_data.csv')
+commandline_parser$add_argument('--min_pixel',
+                                type='integer', nargs='?', default=400)
+commandline_parser$add_argument('--max_pixel',
+                                type='integer', nargs='?', default=900)
 
 args <- commandline_parser$parse_args()
-dark_field_table <- as.data.table(read.csv(args$f))
-setkeyv(dark_field_table, "angle")
-#print(dark_field_table)
-#print(nrow(dark_field_table))
-#print(ncol(dark_field_table))
+angle.table <- data.table(read.csv(args$f), key="angle")
 
-min_pixel <- 300
-max_pixel <- 800
+min_pixel <- args$min_pixel
+max_pixel <- args$max_pixel
 
-selected_pixels <- dark_field_table[, min_pixel:max_pixel, with=FALSE]
-print(selected_pixels)
-print(nrow(selected_pixels))
-print(ncol(selected_pixels))
-average <- selected_pixels[, list(mean=rowMeans(.SD))]
-print(average)
-print(nrow(average))
-print(ncol(average))
+absorption.table <- angle.table[pixel %between% c(min_pixel, max_pixel),
+                                list(signal="absorption",
+                                     mean=mean(absorption),
+                                     sd=sd(absorption)),
+                                by=angle]
+darkfield.table <- angle.table[pixel %between% c(min_pixel, max_pixel),
+                               list(signal="darkfield",
+                                    mean=mean(darkfield),
+                                    sd=sd(darkfield)),
+                                by=angle]
+
+average <- rbind(absorption.table, darkfield.table)
+
+file_name <- "graphs.pdf"
+pdf(file_name,
+    width=17, height=12)
+graph <- ggplot(average,
+                aes(x=angle,
+                    y=mean,
+                    color=signal)) + geom_line(
+                aes(group=signal)) + scale_y_continuous(
+                name=sprintf("average over pixels %d to %d",
+                    min_pixel, max_pixel)) + scale_x_continuous(
+                name="angle (degrees)") + geom_ribbon(
+                    aes(ymin=mean - sd,
+                        ymax=mean + sd,
+                        linetype=NA,
+                        fill=signal),
+                    alpha=0.2)
+print(graph)
+dev.off()
+embed_fonts(file_name)
