@@ -24,9 +24,10 @@ if __name__ == '__main__':
                         help="json file with angle/flats/files dict")
     args = parser.parse_args()
 
-    scan_dict = json.load(open(args.file[0]))
+    input_file_name = args.file[0]
+    scan_dict = json.load(open(input_file_name))
 
-    output_table = "angle_data.csv"
+    output_table = input_file_name.replace(".json", ".csv")
     with open(output_table, "w") as output_file:
         print("angle,pixel,absorption,darkfield", file=output_file)
         for angle, scan in scan_dict.iteritems():

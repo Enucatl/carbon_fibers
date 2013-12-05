@@ -32,7 +32,7 @@ darkfield.table <- angle.table[pixel %between% c(min_pixel, max_pixel),
 
 average <- rbind(absorption.table, darkfield.table)
 
-file_name <- "graphs.pdf"
+file_name <- gsub(".csv", ".pdf", args$f)
 pdf(file_name,
     width=17, height=12)
 graph <- ggplot(average,
