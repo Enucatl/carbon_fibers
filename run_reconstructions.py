@@ -15,15 +15,6 @@ import json
 reconstruction_bin = "reconstruction.py"
 
 
-def scan_name(number):
-    """Return the name of the hdf5 file given the scan number
-
-    :number: scan number
-    :returns: string with the basename of the hdf5 file
-
-    """
-    return "S{0:05d}.hdf5".format(number)
-
 if __name__ == '__main__':
     steps = 21
     parser = argparse.ArgumentParser(
