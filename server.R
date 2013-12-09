@@ -4,14 +4,14 @@ library(data.table)
 
 shinyServer(function(input, output) {
 
-  dataset <- reactive(function() {
+  dataset <- reactive({
     data.table(read.csv(input$file), key="angle")
   })
 
-  output$plot <- reactivePlot(function() {
+  output$plot <- renderPlot({
 
-    min_pixel <- input$min_pixel
-    max_pixel <- input$max_pixel
+    min_pixel <- input$pixels[[1]]
+    max_pixel <- input$pixels[[2]]
 
     absorption.table <- dataset()[pixel %between% c(min_pixel, max_pixel),
                                     list(signal="absorption",
