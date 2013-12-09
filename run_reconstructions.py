@@ -35,6 +35,9 @@ if __name__ == '__main__':
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("files", nargs='+',
                         help="files with the scans")
+    parser.add_argument("steps", nargs='?',
+                        type=int, default=21,
+                        help="phase steps")
     parser.add_argument("flats_every", nargs='?',
                         type=int, default=5,
                         help="flats every n scans")
@@ -56,7 +59,7 @@ if __name__ == '__main__':
     command += " -j 7 "
     command += " --flats_every {0} ".format(args.flats_every)
     command += " --n_flats {0} ".format(args.n_flats)
-    command += " --steps {0} ".format(steps)
+    command += " --steps {0} ".format(args.steps)
     print(command)
     check_call(command, shell=True)
     input_file_name = os.path.dirname(
