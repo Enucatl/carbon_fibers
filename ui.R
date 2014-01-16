@@ -5,7 +5,7 @@ dataset <- diamonds
 
 shinyUI(pageWithSidebar(
 
-  headerPanel("Angular dependence of dark field signal"),
+  headerPanel("Carbon fiber samples"),
 
   sidebarPanel(
     includeCSS("sidebar.css"),
@@ -16,7 +16,7 @@ shinyUI(pageWithSidebar(
     selectInput('file', 'File', list.files(path=".",
                                            pattern="*.csv")),
 
-    checkboxInput('sd', 'Show standard deviation the selected pixels')
+    checkboxInput('sd', 'Show standard deviation in the selected pixels')
 
   ),
 

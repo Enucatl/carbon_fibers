@@ -31,8 +31,8 @@ shinyServer(function(input, output) {
                     color=signal)) + geom_line(
                 aes(group=signal)) + scale_y_continuous(
                 name=sprintf("average over pixels %d to %d",
-                    min_pixel, max_pixel)) + scale_x_continuous(
-                name="angle (degrees)")
+                    min_pixel, max_pixel), limits=c(0.75, 1)) + scale_x_continuous(
+                name="angle (degrees)") + theme(axis.title.y=element_text(vjust=0))
     if (input$sd)
       graph <- graph + geom_ribbon(
                     aes(ymin=mean - sd,
