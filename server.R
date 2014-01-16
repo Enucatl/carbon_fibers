@@ -43,6 +43,6 @@ shinyServer(function(input, output) {
 
     print(graph)
 
-  }, height=700)
+  }, height=350)
 
 })
